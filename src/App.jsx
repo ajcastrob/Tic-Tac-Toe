@@ -1,4 +1,5 @@
 import { useState } from "react";
+import confetti from "canvas-confetti";
 import "./App.css";
 
 const TURNS = {
@@ -63,6 +64,7 @@ function App() {
     //si no hay más espacios vacíos
     //en el tablero.
 
+    //Comprobar que todos los espacios son diferentes de null
     return newBoard.every((square) => square !== null);
   };
 
@@ -80,6 +82,7 @@ function App() {
     //Revisar si hay un ganador.
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
+      confetti();
       //Actualizar el estado con el nuevo ganador.
       setWinner(newWinner);
     } else if (checkEndGame(newBoard)) {
