@@ -33,8 +33,16 @@ const Square = ({ children, isSelected, updateBoard, index }) => {
 };
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(TURNS.X);
+  const [board, setBoard] = useState(() => {
+    const boardToLocalStorage = window.localStorage.getItem("board");
+    return boardToLocalStorage
+      ? JSON.parse(boardToLocalStorage)
+      : Array(9).fill(null);
+  });
+  const [turn, setTurn] = useState(() => {
+    const turnToLocalStorage = window.localStorage.getItem("turn");
+    return turnToLocalStorage ? JSON.parse(turnToLocalStorage) : TURNS.X;
+  });
   const [winner, setWinner] = useState(null); //null, no hay ganador. False, hay un empate.
 
   const checkWinner = (boardToCheck) => {
@@ -79,6 +87,11 @@ function App() {
     //Establecer el nuevo turno.
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     setTurn(newTurn);
+
+    //Guardar partida.
+    window.localStorage.setItem("board", JSON.stringify(newBoard));
+    window.localStorage.setItem("turn", JSON.stringify(newTurn));
+
     //Revisar si hay un ganador.
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
